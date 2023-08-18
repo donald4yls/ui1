@@ -38,7 +38,7 @@ function patchRouteItems(route: any, menu: any, parentPath: string) {
         patchRouteItems(newItem, menuItem.routes, parentPath + menuItem.path + '/');
       }
     } else {
-      const names: string[] = menuItem.component.split('/');
+      const names: string[] = menuItem?.component?.split('/');
       let path = '';
       names.forEach(name => {
         if (path.length > 0) {
@@ -49,9 +49,9 @@ function patchRouteItems(route: any, menu: any, parentPath: string) {
         } else {
           path += name;
         }
-      })
-      if (!path.endsWith('.tsx')) {
-        path += '.tsx'
+      });
+      if (!path.endsWith('index.tsx')) {
+        path += '/index.tsx'
       }
       if (route.routes === undefined) {
         route.routes = [];
@@ -59,8 +59,11 @@ function patchRouteItems(route: any, menu: any, parentPath: string) {
       if (route.children === undefined) {
         route.children = [];
       }
+
       const newRoute = {
+        //lazy: (() => import('@/pages/' + path)),
         element: React.createElement(lazy(() => import('@/pages/' + path))),
+        //element: React.createElement("h1", { style: { color: "black" } }, "Hello World "+path),
         path: parentPath + menuItem.path,
       }
       route.children.push(newRoute);
@@ -97,8 +100,7 @@ export function convertCompatRouters(childrens: API.RoutersMenuItem[]): any[] {
     return {
       path: item.path,
       icon: createIcon(item.meta.icon),
-      //  icon: item.meta.icon,
-      name: item.meta.title,
+      name: item?.meta?.title,
       routes: item.children ? convertCompatRouters(item.children) : undefined,
       hideChildrenInMenu: item.hidden,
       hideInMenu: item.hidden,
@@ -111,7 +113,6 @@ export function convertCompatRouters(childrens: API.RoutersMenuItem[]): any[] {
 export async function getRoutersInfo(): Promise<MenuDataItem[]> {
   return getRouters().then((res) => {
     if (res.code === 200) {
-      console.log('===>route:  '+JSON.stringify(res.data));
       return convertCompatRouters(res.data);
     } else {
       return [];
@@ -123,6 +124,7 @@ export function getMatchMenuItem(
   path: string,
   menuData: MenuDataItem[] | undefined,
 ): MenuDataItem[] {
+  console.log('......');
   if (!menuData) return [];
   let items: MenuDataItem[] = [];
   menuData.forEach((item) => {

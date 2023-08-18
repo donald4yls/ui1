@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import route from './route';
 
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
@@ -23,6 +24,7 @@ const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION } = process.env;
 let access = ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site' ? 'admin' : '';
 
 const getAccess = () => {
+  console.log('2. access ---> ' + access);
   return access;
 };
 
@@ -46,7 +48,7 @@ export default {
       data: {
         name: 'Serati Ma',
         avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
-        userid: '00000001',
+        userId: '00000001',
         email: 'antdesign@alipay.com',
         signature: '海纳百川，有容乃大',
         title: '交互专家',
@@ -201,24 +203,29 @@ export default {
 
   'GET  /api/login/captcha': getFakeCaptcha,
 
-  'GET /api/system/menu/getRouters':async (req: Request, res: Response) => {
-    res.send({ code: 200, status: 'ok', data: [
-      {
-        alwaysShow: true,
-        component: "./Test",
-        hidden: false,
-        meta: { title: 'Test', subtitle: 'SubTestTitle'},
-        name: 'TestPage',
-        path: '/test'
-      },
-      {
-        alwaysShow: true,
-        component: "./Test",
-        hidden: false,
-        meta: { title: 'Test2', subtitle: 'SubTestTitle2'},
-        name: 'TestPage2',
-        path: '/test2'
-      }
-    ]});
+  'GET /api/system/menu/getRouters': async (req: Request, res: Response) => {
+    res.send({
+      code: 200, status: 'ok', data: [
+        {
+          path: '/Test',
+          name: 'Test',
+          meta: {
+            icon: 'Smile',
+            title: 'Test'
+          },
+          component: 'Test',
+        },
+        {
+          path: '/list',
+          component: 'TableList',
+          meta: {
+            icon: 'Folder',
+            title: 'list'
+          },
+          hidden: false,
+          perms: 'admin'
+        }
+      ]
+    });
   },
 };

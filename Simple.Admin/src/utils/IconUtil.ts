@@ -12,6 +12,9 @@ export function createIcon(icon: string | any): React.ReactNode | string {
   if (typeof icon === 'object') {
     return icon;
   }
+  if(!icon.endsWith('TwoTone')){
+    icon += 'TwoTone';
+  }
   const ele = allIcons[icon];
   if (ele) {
     return React.createElement(allIcons[icon]);

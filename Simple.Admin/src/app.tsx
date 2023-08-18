@@ -85,8 +85,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       // 如果没有登录，重定向到 login
       if (!initialState?.currentUser && location.pathname !== loginPath) {
         history.push(loginPath);
-      }else{
-        console.log('Check permission before redirect.'+ location.pathname);
       }
     },
     layoutBgImgList: [
@@ -154,6 +152,7 @@ export const request = {
 };
 
 export async function onRouteChange({ clientRoutes, location }) {
+  console.log('here....');
   const menus = getRemoteMenu();
   //console.log('onRouteChange', clientRoutes, location, menus);
   if(menus === null && location.pathname !== PageEnum.LOGIN) {
@@ -167,14 +166,12 @@ export async function patchClientRoutes({ routes }) {
 };
 
 export function render(oldRender: () => void) {
-  console.log('render get routers', oldRender)
   const token = getAccessToken();
   if(!token || token?.length === 0) {
     oldRender();
     return;
   }
   getRoutersInfo().then(res => {
-    console.log('Print out the router.' + JSON.stringify(res));
     setRemoteMenu(res);
     oldRender()
   });

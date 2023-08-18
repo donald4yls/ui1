@@ -1,7 +1,6 @@
 import { useIntl } from '@umijs/max';
 import { Button, message, notification } from 'antd';
 import defaultSettings from '../config/defaultSettings';
-import { getRoutes } from './services/ant-design-pro/api';
 
 const { pwa } = defaultSettings;
 const isHttps = document.location.protocol === 'https:';
